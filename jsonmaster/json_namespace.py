@@ -1,7 +1,10 @@
 class JsonNamespace:
     def __init__(self, data_dict: dict) -> None:
         for key, value in data_dict.items():
-            setattr(self, key, value)
+            if type(value) is dict:
+                setattr(self, key, JsonNamespace(value))
+            else:
+                setattr(self, key, value)
 
     def __getattr__(self, key):
         try:
