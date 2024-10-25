@@ -39,9 +39,17 @@ class JsonFile:
         raise Exception("JsonFile cant be copied")
 
     def dict(self) -> dict:
+        """
+        Json loaded into a python dict
+        :return: dict
+        """
         return self.__data
 
     def flush(self) -> None:
+        """
+        Force flush json changes to the file
+        :return:
+        """
         self.__seek_start()
         self.__file_fd.write(json.dumps(self.__data, sort_keys=self.__sort_keys, indent=4 if self.__prettify else 0))
 
@@ -53,6 +61,11 @@ class JsonFile:
         return JsonNamespace(self.__data)
 
     def dataclass(self, basemodel_type: Type[_T]) -> _T:
+        """
+        This function accepts a pydantic BaseModel and fills it with the jsonfile data
+        :param basemodel_type: your pydantic basemodel class
+        :return: basemodel_type instance with json_file data
+        """
         if not issubclass(basemodel_type, BaseModel):
             raise Exception("This feature is only supported for classes which inherit from Pydantic BaseModel")
 
