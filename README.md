@@ -116,5 +116,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Author
 
-Created by [Ethan Lerner](https://github.com/yourusername).
+Created by [Ethan Lerner](https://github.com/EthanLerner1).
 
