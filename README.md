@@ -11,7 +11,7 @@ Whatever you are doing with jsons, **JSONMaster**,aims to simplify your workflow
 
 ## Installation
 
-You can install BetterJSON via pip:
+You can install JSONMaster via pip:
 
 ```bash
 pip install jsonmaster
