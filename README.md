@@ -1,60 +1,71 @@
-# BetterJSON
+# JSONMaster
 
-**BetterJSON** is a Python package designed to provide a collection of utilities for working with JSON data. Whether you're parsing, validating, transforming, or formatting JSON, BetterJSON aims to simplify your workflow and enhance your productivity.
+**JSONMaster** is a Python package designed to provide a collection of utilities for working with JSON data.
+Whatever you are doing with jsons, **JSONMaster**,aims to simplify your workflow and enhance your productivity.
 
 ## Features
 
 - **Easy Parsing**: Effortlessly parse JSON strings into Python objects.
-- **Validation**: Validate JSON data against specified schemas to ensure data integrity.
-- **Transformation**: Transform JSON structures with intuitive functions.
-- **Pretty Printing**: Output JSON in a human-readable format for easier debugging.
+- **Transformation**: Transform JSON structures with intuitive functions to namespaces or dataclasses.
 - **File I/O**: Simplify reading from and writing to JSON files.
-- **Merge and Diff**: Combine JSON objects or compare them to find differences.
 
 ## Installation
 
 You can install BetterJSON via pip:
 
 ```bash
-pip install betterjson
+pip install jsonmaster
 ```
 
 ## Usage
 
-### Parsing JSON
+### Reading a json file
 
-Convert a JSON string into a Python dictionary:
-
+Read a json from a file path
 ```python
-from betterjson import parse
+from jsonmaster import open_json, JsonFile
 
-data = parse('{"name": "Alice", "age": 30}')
-print(data)  # Output: {'name': 'Alice', 'age': 30}
+# easy option
+with open_json("jsonfile.json") as jf:
+    print(jf.dict())
+
+# configurable option
+with JsonFile(file_path="jsonfile.json", sort_keys=True, immediate_flush=True, prettify=True) as jf:
+    print(jf.dict())
 ```
 
-### Validating JSON
 
-Validate JSON data against a schema:
+### Using regular json package
+
+All regular [json package](https://docs.python.org/3/library/json.html) capabilities are imported inside jsonmaster
 
 ```python
-from betterjson import validate
+import jsonmaster
 
-schema = {"type": "object", "properties": {"name": {"type": "string"}, "age": {"type": "integer"}}}
-data = {"name": "Alice", "age": 30}
+data: str = '{"name": "Alice", "age": 30}'
 
-is_valid = validate(data, schema)
-print(is_valid)  # Output: True
+d: dict = jsonmaster.loads(data)
+
+print(jsonmaster.dumps(d))
+
+# ...
 ```
 
-### Pretty Printing
+### Accessing json as a namespace
 
-Output JSON in a readable format:
-
+Use your jsons as an actual python class
 ```python
-from betterjson import pretty_print
+from jsonmaster import open_json, JsonNamespace
 
-json_data = {"name": "Alice", "age": 30}
-pretty_print(json_data)
+# jsonfile.json contains {"key": "value"}
+with open_json("jsonfile.json") as jf:
+    namespace: JsonNamespace = jf.namespace()
+    
+    # access the key 
+    print(namespace.key)
+    
+    # set will not affect the original file
+
 ```
 
 ### File I/O
@@ -62,14 +73,37 @@ pretty_print(json_data)
 Read and write JSON files easily:
 
 ```python
-from betterjson import read_json, write_json
+from jsonmaster import open_json
 
-# Write to a JSON file
-write_json('data.json', json_data)
+# jsonfile.json contains {"key": "value"}
+with open_json("jsonfile.json") as jf:
+    # Adding a new key to the json file
+    jf["new_key"] = "new_value"
+    
+    # Accessing an existing key in the json file
+    print(jf["old_key"])
+    print(jf["new_key"])
 
-# Read from a JSON file
-data_from_file = read_json('data.json')
-print(data_from_file)
+```
+
+
+### Dataclasses
+
+Load your json file into your **pydantic** BaseModel easily
+
+```python
+from jsonmaster import open_json
+from pydantic import BaseModel
+
+
+class MyModel(BaseModel):
+    my_model_str_key: str
+    my_model_int_key: int
+
+
+with open_json('jsonfile.json') as jf:
+    m: MyModel = jf.dataclass(MyModel)
+    print(m.my_model_str_key)
 ```
 
 ## Contributing
@@ -82,7 +116,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Author
 
-Created by [Your Name](https://github.com/yourusername).
-```
+Created by [Ethan Lerner](https://github.com/yourusername).
 
-Feel free to customize sections like features, usage examples, and author information to better reflect your package's specifics!

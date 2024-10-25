@@ -1,4 +1,9 @@
-from typing import Tuple, List, TypeVar
+from typing import List, Union, TypeVar
 
-JsonValue: TypeVar = Tuple[int, str, List[int, str]]
+from pydantic import BaseModel
+
+JsonBasicValueType = Union[int, str]
+JsonValueType = Union[int, str, List[JsonBasicValueType]]
+
+_T = TypeVar('_T', bound=BaseModel)
 
